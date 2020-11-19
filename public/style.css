@@ -9,7 +9,7 @@
 body {
     width: 100vw;
     height: 100vh;
-    background-color: rgb(16, 41, 88);
+    background-color: rgb(91, 99, 114);
 }
 
 header {
@@ -28,4 +28,48 @@ main {
 
 canvas {
     background-color: beige;
+}
+
+#people,
+#other-players,
+#chat-canvas {
+    display: flex;
+}
+
+.players {
+    font-size: 3rem;
+}
+
+#guess-field {
+    margin-top: 10px;
+}
+
+#input-field {
+    font-size: 2rem;
+    padding: 10px;
+}
+
+button {
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 1.5rem;
+    background-color: rgb(255, 123, 0);
+}
+
+#chat {
+    width: 20vw;
+    height: 400px;
+    background-color: orange;
+    margin-left: 5px;
+    padding: 10px;
+    overflow: auto;
+}
+#chat > p {
+    border-top: 1px solid gray;
+    padding: 5px 0;
+}
+
+.correct:hover {
+    background-color: green;
+    cursor: pointer;
 }

@@ -18,11 +18,18 @@
         </header>
         <main>
             <p>Word</p>
-            <div>
+            <div id="chat-canvas">
                 <canvas width="600px" height="400px"></canvas>
                 <div id="chat"></div>
             </div>
-            <div id="people">People</div>
+            <div id="people">
+                <div id="my-emoji" class="players"></div>
+                <div id="other-players"></div>
+            </div>
+            <div id="guess-field">
+                <input type="text" id="input-field" />
+                <button id="guess-button">Guess</button>
+            </div>
         </main>
     </body>
     <script src="/socket.io/socket.io.js"></script>
