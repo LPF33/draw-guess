@@ -21,15 +21,6 @@ app.get("/", (request, response) => {
     response.sendFile(__dirname + "/views/index.html");
 });
 
-app.post("/game", (request, response) => {
-    const gameRoomId = cryptoRandomString({ length: 20 });
-    response.redirect(`/game/${gameRoomId}`);
-});
-
-app.get("/game/:roomId", (request, response) => {
-    response.sendFile(__dirname + "/views/game.html");
-});
-
 io.on("connection", (socket) => {
     console.log(`socket with the id ${socket.id} is now connected`);
 });
