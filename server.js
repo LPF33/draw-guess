@@ -1,17 +1,17 @@
 const express = require("express");
 const socket = require("socket.io");
-const cryptoRandomString = require("crypto-random-string");
+const counter = require("./counter")();
 
 // prettier-ignore
-const emojis = ['🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐶', '🐱', '🐭', '🐹', '🐰', '🐷', '🐸', '🐵', '🐙', '🐳', '🐢', '🐿', '🐔'];
+const emojis = ['🐸','🐱','🦊', '🐻', '🐼', '🐨', '🐙', '🦁','🐹', '🐰'];
 
 const port = process.env.PORT || 8080;
 
 const app = express();
-//const server = app.listen(port);
+const server = app.listen(port);
 
-const server = require("http").Server(app);
-server.listen(port, () => console.log("Server running on port ", port));
+//const server = require("http").Server(app);
+//server.listen(port, () => console.log("Server running on port ", port));
 
 const io = socket(server);
 
@@ -22,15 +22,20 @@ app.get("/", (request, response) => {
 });
 
 io.on("connection", (socket) => {
+    const [playerNumber, startPlayer] = counter.getCounter(socket);
     console.log(`socket with the id ${socket.id} is now connected`);
 
     socket.on("player-online", () => {
-        const randomNum = Math.floor(Math.random() * 20);
-        const emoji = emojis[randomNum];
-        const playerData = { emoji, socketId: socket.id };
+        const emoji = emojis[playerNumber];
+        const playerData = {
+            emoji,
+            socketId: socket.id,
+            playerNumber,
+            startPlayer,
+        };
         socket.emit("get-emoji", playerData);
         socket.broadcast.emit("new-player", playerData);
-        //error with io.sockets.sockets[socket.id].broadcast.emit("new-player", playerData);
+        //io.sockets.sockets[socket.id].broadcast.emit("new-player", playerData);
     });
 
     socket.on("send-emoji-to-new-player", (data) => {
@@ -39,6 +44,7 @@ io.on("connection", (socket) => {
 
     socket.on("disconnect", () => {
         io.emit("player-left", { socketId: socket.id });
+        counter.socketLeft(playerNumber);
     });
 
     socket.on("guess", (data) => {
@@ -47,5 +53,19 @@ io.on("connection", (socket) => {
 
     socket.on("draw", (data) => {
         socket.broadcast.emit("draw", data);
+    });
+
+    socket.on("correct-answer", (data) => {
+        io.sockets.emit("correct-answer", data);
+        io.sockets.emit("next-round", data);
+    });
+
+    socket.on("next-player", () => {
+        const nextPlayer = counter.nextPlayer();
+        io.sockets.emit("next-player", nextPlayer);
+    });
+
+    socket.on("i-am-next-player", (data) => {
+        io.sockets.emit("i-am-next-player", data);
     });
 });
