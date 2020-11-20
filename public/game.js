@@ -1,7 +1,7 @@
 const socket = io.connect();
 
 let playerData;
-let startingPlayer;
+let drawPlayer;
 const emojiElem = document.querySelector(".my-emoji");
 const emojiOtherPlayers = document.querySelector("#other-players");
 
@@ -10,15 +10,16 @@ socket.emit("player-online");
 socket.on("get-emoji", (data) => {
     emojiElem.innerHTML = data.emoji;
     emojiElem.id = data.socketId;
+    emojiElem.innerHTML += `<span>${data.points}</span>`;
     playerData = data;
-    if (data.startPlayer) {
-        emojiElem.classList.add("startPlayer");
-        startingPlayer = data.playerNumber;
+    if (data.drawPlayer) {
+        emojiElem.classList.add("drawPlayer");
+        drawPlayer = data.playerNumber;
     }
 });
 
 socket.on("new-player", (data) => {
-    const newPlayerElem = `<div id="${data.socketId}" class="players">${data.emoji}</div>`;
+    const newPlayerElem = `<div id="${data.socketId}" class="players">${data.emoji}<span>${data.points}</span></div>`;
     emojiOtherPlayers.innerHTML += newPlayerElem;
     socket.emit("send-emoji-to-new-player", {
         newPlayer: data.socketId,
@@ -27,10 +28,13 @@ socket.on("new-player", (data) => {
 });
 
 socket.on("send-my-emoji", (data) => {
-    const newPlayerElem = data.startPlayer
-        ? `<div id="${data.socketId}" class="players startPlayer">${data.emoji}</div>`
-        : `<div id="${data.socketId}" class="players">${data.emoji}</div>`;
+    const newPlayerElem = data.drawPlayer
+        ? `<div id="${data.socketId}" class="players drawPlayer">${data.emoji}<span>${data.points}</span></div>`
+        : `<div id="${data.socketId}" class="players">${data.emoji}<span>${data.points}</span></div>`;
     emojiOtherPlayers.innerHTML += newPlayerElem;
+    if (data.drawPlayer) {
+        drawPlayer = data.playerNumber;
+    }
 });
 
 socket.on("player-left", (data) => {
@@ -46,19 +50,18 @@ const chatField = document.getElementById("chat");
 
 guessButton.addEventListener("click", () => {
     const guessedValue = inputField.value;
-    console.log(startingPlayer, playerData.playerNumber);
-    if (guessedValue && startingPlayer !== playerData.playerNumber) {
+    if (guessedValue && drawPlayer !== playerData.playerNumber) {
         socket.emit("guess", { guessedValue, playerData });
+        inputField.value = "";
     }
 });
 
 socket.on("guess", (data) => {
+    const userJson = JSON.stringify(data.playerData);
     const chatNode = `<p>${
         data.playerData.emoji
-    } guessed: <strong>${data.guessedValue.toUpperCase()}</strong> <button class="correct" datauser="${
-        data.playerData.socketId
-    }" dataword="${data.guessedValue}" dataemoji="${
-        data.playerData.emoji
+    } guessed: <strong>${data.guessedValue.toUpperCase()}</strong> <button class="correct" datauser=${userJson} dataword="${
+        data.guessedValue
     }">👍🏻</button></p>`;
     chatField.innerHTML += chatNode;
     chatField.scrollTop = chatField.scrollHeight;
@@ -71,7 +74,7 @@ let startPointX;
 let startPointY;
 
 const drawstart = (e) => {
-    if (startingPlayer === playerData.playerNumber) {
+    if (drawPlayer === playerData.playerNumber) {
         startPointX = e.offsetX;
         startPointY = e.offsetY;
         canvas.addEventListener("mousemove", draw);
@@ -111,15 +114,13 @@ chatField.addEventListener("click", (e) => {
     if (
         e.target.attributes.hasOwnProperty("datauser") &&
         e.target.attributes.hasOwnProperty("dataword") &&
-        playerData.playerNumber === startingPlayer
+        playerData.playerNumber === drawPlayer
     ) {
-        const playerGuessedRight = e.target.attributes.datauser.value;
-        const playerEmoji = e.target.attributes.dataemoji.value;
+        const parsedUser = JSON.parse(e.target.attributes.datauser.value);
         const guessedWord = e.target.attributes.dataword.value;
         socket.emit("correct-answer", {
-            playerGuessedRight,
+            parsedUser,
             guessedWord,
-            playerEmoji,
         });
     }
 });
@@ -127,39 +128,54 @@ chatField.addEventListener("click", (e) => {
 const correctWord = document.querySelector("#correct-word");
 
 socket.on("correct-answer", (data) => {
-    const winnerEmoji = document.querySelector(`#${data.playerGuessedRight}`);
+    const winnerEmoji = document.getElementById(data.parsedUser.socketId);
     winnerEmoji.classList.add("winner");
     const chatNode = `<p>Correct answer: <strong>${data.guessedWord.toUpperCase()}</strong> </br> Winner: ${
-        data.playerEmoji
+        data.parsedUser.emoji
     }</p>`;
     chatField.innerHTML += chatNode;
     chatField.scrollTop = chatField.scrollHeight;
+    const pointElement = document.querySelector(
+        "div#" + data.parsedUser.socketId + " > span"
+    );
+    if (data.parsedUser.playerNumber === playerData.playerNumber) {
+        playerData.points += 1;
+    }
+    console.log(playerData);
+    console.log(data.parsedUser);
+    pointElement.innerHTML = data.parsedUser.points + 1;
 });
 
-const clearFunction = (data) => {
-    const winnerEmoji = document.querySelector(`#${data.playerGuessedRight}`);
-    winnerEmoji.classList.remove("winner");
-    if (startingPlayer === playerData.playerNumber) {
-        socket.emit("next-player");
+const clearFunction = () => {
+    const winnerEmoji = document.querySelector(".winner");
+    if (winnerEmoji) {
+        winnerEmoji.classList.remove("winner");
     }
 };
 
-socket.on("next-round", (data) => {
-    setTimeout(() => clearFunction(data), 1000);
-});
-
 socket.on("next-player", (data) => {
-    console.log(data);
-    const currentStartPlayer = document.querySelector(".startPlayer");
-    currentStartPlayer.classList.remove("startPlayer");
-    startingPlayer = data;
-    if (startingPlayer === playerData.playerNumber) {
+    setTimeout(clearFunction, 1000);
+
+    const correctButtons = document.querySelectorAll("button.correct");
+    correctButtons.forEach((item) => {
+        item.disabled = true;
+    });
+
+    const currentDrawPlayer = document.querySelector(".drawPlayer");
+    if (currentDrawPlayer) {
+        currentDrawPlayer.classList.remove("drawPlayer");
+    }
+
+    drawPlayer = data;
+    playerData.drawPlayer = false;
+    if (data === playerData.playerNumber) {
+        playerData.drawPlayer = true;
         socket.emit("i-am-next-player", playerData);
     }
 });
 
 socket.on("i-am-next-player", (data) => {
-    const nextPlayer = document.querySelector(`#${data.socketId}`);
-    nextPlayer.classList.add("startPlayer");
+    const nextPlayer = document.getElementById(data.socketId);
+    nextPlayer.classList.add("drawPlayer");
     ctx.clearRect(0, 0, 600, 400);
 });

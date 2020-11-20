@@ -5,10 +5,13 @@ const counter = require("./counter")();
 // prettier-ignore
 const emojis = ['🐸','🐱','🦊', '🐻', '🐼', '🐨', '🐙', '🦁','🐹', '🐰'];
 
+//Setup for the Server and binding to Socket.io
 const port = process.env.PORT || 8080;
 
 const app = express();
-const server = app.listen(port);
+const server = app.listen(port, () =>
+    console.log("Server running on port ", port)
+);
 
 //const server = require("http").Server(app);
 //server.listen(port, () => console.log("Server running on port ", port));
@@ -22,7 +25,8 @@ app.get("/", (request, response) => {
 });
 
 io.on("connection", (socket) => {
-    const [playerNumber, startPlayer] = counter.getCounter(socket);
+    const [playerNumber, drawPlayer] = counter.getCounter(socket);
+
     console.log(`socket with the id ${socket.id} is now connected`);
 
     socket.on("player-online", () => {
@@ -31,41 +35,47 @@ io.on("connection", (socket) => {
             emoji,
             socketId: socket.id,
             playerNumber,
-            startPlayer,
+            drawPlayer,
+            points: 0,
         };
+        //sending to the client
         socket.emit("get-emoji", playerData);
+        //sending to all clients connected to the server except the sender
         socket.broadcast.emit("new-player", playerData);
-        //io.sockets.sockets[socket.id].broadcast.emit("new-player", playerData);
     });
 
     socket.on("send-emoji-to-new-player", (data) => {
+        //send to a specific client
         io.to(data.newPlayer).emit("send-my-emoji", data.playerData);
     });
 
     socket.on("disconnect", () => {
+        //sending to all connected clients
         io.emit("player-left", { socketId: socket.id });
-        counter.socketLeft(playerNumber);
+        counter.socketLeft(playerNumber, io);
     });
 
     socket.on("guess", (data) => {
+        //sending to all connected clients
         io.sockets.emit("guess", data);
     });
 
     socket.on("draw", (data) => {
+        //sending to all clients connected to the server except the sender
         socket.broadcast.emit("draw", data);
     });
 
     socket.on("correct-answer", (data) => {
+        //sending to all connected clients
         io.sockets.emit("correct-answer", data);
-        io.sockets.emit("next-round", data);
-    });
 
-    socket.on("next-player", () => {
         const nextPlayer = counter.nextPlayer();
+        //sending to all connected clients
         io.sockets.emit("next-player", nextPlayer);
     });
 
     socket.on("i-am-next-player", (data) => {
+        //sending to all connected clients
         io.sockets.emit("i-am-next-player", data);
     });
 });
