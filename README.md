@@ -4,7 +4,7 @@
 
 ### sending to the client:
 
--   socket.emit('hello', 'can you hear me?', 1, 2, 'abc');
+-   socket.emit('message', 'hello stranger!');
 
 ### sending to all clients except sender:
 
@@ -48,3 +48,27 @@
 ### leave to unsubscribe the socket to a given channel:
 
 -   socket.leave('some room');
+
+## Note: The following events are reserved and should not be used as event names by your application:
+
+-   connect
+-   connect_error
+-   disconnect
+-   disconnecting
+-   newListener
+-   removeListener
+
+## Some useful stuff:
+
+### Disconnect the socket:
+
+-   socket.disconnect();
+
+### Event, when the socket disconnects (e.g. closes the browser):
+
+-   socket.on("disconnect", () => {
+    io.emit('The socket with the id \${socket.id} left us!');
+    });
+
+More on:
+https://socket.io/docs/v3
