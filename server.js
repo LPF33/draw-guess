@@ -35,6 +35,7 @@ io.on("connection", (socket) => {
 
     socket.on("player-online", () => {
         const emoji = emojis[playerNumber];
+
         const playerData = {
             emoji,
             socketId: socket.id,
@@ -42,6 +43,7 @@ io.on("connection", (socket) => {
             drawPlayer,
             points: 0,
         };
+
         //sending to the client
         socket.emit("get-emoji", playerData);
         //sending to all clients connected to the server except the sender

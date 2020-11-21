@@ -2,6 +2,7 @@
     margin: 0;
     padding: 0;
     border: 0;
+    -webkit-box-sizing: border-box;
     box-sizing: border-box;
     font-family: "Fredericka the Great", cursive;
 }
@@ -23,9 +24,18 @@ h1 {
 
 main {
     width: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
     flex-direction: column;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
     align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
     justify-content: center;
 }
 
@@ -36,6 +46,8 @@ canvas {
 #people,
 #other-players,
 #chat-canvas {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
 }
 
@@ -84,6 +96,8 @@ canvas {
     bottom: 0;
     left: -1rem;
     font-size: 3rem;
+    -webkit-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
     transform: rotate(90deg);
 }
 

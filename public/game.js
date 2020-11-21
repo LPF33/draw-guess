@@ -5,7 +5,7 @@ let drawPlayer;
 const emojiElem = document.querySelector(".my-emoji");
 const emojiOtherPlayers = document.querySelector("#other-players");
 
-//just grabbing the audio element and play it when someone enters the room
+//just grabbing the audio element and play it when someone guesses right
 const audioElement = document.querySelector("audio");
 
 socket.emit("player-online");
@@ -36,7 +36,9 @@ socket.on("send-my-emoji", (data) => {
     const newPlayerElem = data.drawPlayer
         ? `<div id="player${data.playerNumber}" class="players drawPlayer">${data.emoji}<span>${data.points}</span></div>`
         : `<div id="player${data.playerNumber}" class="players">${data.emoji}<span>${data.points}</span></div>`;
+
     emojiOtherPlayers.innerHTML += newPlayerElem;
+
     if (data.drawPlayer) {
         drawPlayer = data.playerNumber;
     }
@@ -53,11 +55,21 @@ const inputField = document.getElementById("input-field");
 const guessButton = document.getElementById("guess-button");
 const chatField = document.getElementById("chat");
 
-guessButton.addEventListener("click", () => {
+const sendGuess = () => {
     const guessedValue = inputField.value;
     if (guessedValue && drawPlayer !== playerData.playerNumber) {
         socket.emit("guess", { guessedValue, playerData });
         inputField.value = "";
+    }
+};
+
+guessButton.addEventListener("click", () => {
+    sendGuess();
+});
+
+inputField.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+        sendGuess();
     }
 });
 
@@ -191,7 +203,6 @@ socket.on("next-player", (data) => {
 
 socket.on("i-am-next-player", (data) => {
     const nextPlayer = document.getElementById(`player${data.playerNumber}`);
-    console.log(nextPlayer);
     nextPlayer.classList.add("drawPlayer");
     ctx.clearRect(0, 0, 600, 400);
 });
