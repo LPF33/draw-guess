@@ -2,6 +2,7 @@ module.exports = () => {
     let counter = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
     let players = [];
     let drawPlayer = null;
+    let winner = "";
     return {
         getCounter(socket) {
             if (!counter.length) {
@@ -33,6 +34,12 @@ module.exports = () => {
             players.unshift(num);
             drawPlayer = num;
             return num;
+        },
+        setWinner(data) {
+            winner = data;
+        },
+        getWinner(data) {
+            return winner;
         },
     };
 };

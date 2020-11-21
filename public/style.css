@@ -141,3 +141,27 @@ button {
     border-radius: 10px;
     background-color: green;
 }
+
+#winner-main {
+    width: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    font-size: 4rem;
+}
+
+#play-again {
+    width: 100%;
+    text-align: center;
+}
+
+a {
+    font-size: 2rem;
+    color: beige;
+}

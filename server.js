@@ -28,6 +28,15 @@ app.get("/noentry", (request, response) => {
     response.sendFile(__dirname + "/views/noentry.html");
 });
 
+app.get("/winner", (request, response) => {
+    response.sendFile(__dirname + "/views/winner.html");
+});
+
+app.get("/getwinner", (request, response) => {
+    const winner = counter.getWinner();
+    response.json(winner);
+});
+
 io.on("connection", (socket) => {
     const [playerNumber, drawPlayer] = counter.getCounter(socket);
 
@@ -84,5 +93,12 @@ io.on("connection", (socket) => {
     socket.on("i-am-next-player", (data) => {
         //sending to all connected clients
         io.sockets.emit("i-am-next-player", data);
+    });
+
+    socket.on("i-am-winner", (data) => {
+        counter.setWinner(data);
+
+        //sending to all connected clients
+        io.sockets.emit("winner-found");
     });
 });
