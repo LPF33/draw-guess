@@ -1,4 +1,4 @@
-# Socket.io
+# Socket.io (Encounter)
 
 ## Cheatsheet (server-side)
 
