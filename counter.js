@@ -38,7 +38,7 @@ module.exports = () => {
         setWinner(data) {
             winner = data;
         },
-        getWinner(data) {
+        getWinner() {
             return winner;
         },
     };

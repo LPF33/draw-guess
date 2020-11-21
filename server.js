@@ -98,7 +98,6 @@ io.on("connection", (socket) => {
     socket.on("i-am-winner", (data) => {
         counter.setWinner(data);
 
-        //sending to all connected clients
-        io.sockets.emit("winner-found");
+        io.emit("winner-found");
     });
 });

@@ -214,11 +214,16 @@
         ctx.clearRect(0, 0, 600, 400);
     });
 
-    socket.on("disconnect", () => {
-        window.location = "/noentry";
+    let disconnect = true;
+
+    socket.on("disconnect", (reason) => {
+        if (disconnect) {
+            window.location = "/noentry";
+        }
     });
 
     socket.on("winner-found", () => {
+        disconnect = false;
         window.location = "/winner";
     });
 })();
