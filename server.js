@@ -24,6 +24,10 @@ app.get("/", (request, response) => {
     response.sendFile(__dirname + "/views/index.html");
 });
 
+app.get("/noentry", (request, response) => {
+    response.sendFile(__dirname + "/views/noentry.html");
+});
+
 io.on("connection", (socket) => {
     const [playerNumber, drawPlayer] = counter.getCounter(socket);
 
@@ -51,7 +55,8 @@ io.on("connection", (socket) => {
 
     socket.on("disconnect", () => {
         //sending to all connected clients
-        io.emit("player-left", { socketId: socket.id });
+        io.emit("player-left", playerNumber);
+
         counter.socketLeft(playerNumber, io);
     });
 

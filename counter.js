@@ -6,6 +6,7 @@ module.exports = () => {
         getCounter(socket) {
             if (!counter.length) {
                 socket.disconnect();
+                return [null, false];
             } else {
                 const num = counter.shift();
                 players.push(num);
