@@ -1,6 +1,6 @@
+const counter = require("./counter")();
 const express = require("express");
 const socket = require("socket.io");
-const cryptoRandomString = require("crypto-random-string");
 
 // prettier-ignore
 const emojis = ['🦊', '🐻', '🐼', '🐨', '🐯', '🦁', '🐮', '🐶', '🐱', '🐭', '🐹', '🐰', '🐷', '🐸', '🐵', '🐙', '🐳', '🐢', '🐿', '🐔'];
@@ -23,4 +23,8 @@ app.get("/", (request, response) => {
 
 io.on("connection", (socket) => {
     console.log(`socket with the id ${socket.id} is now connected`);
+});
+
+app.get("/blank", (request, response) => {
+    response.sendFile(__dirname + "/views/blank.html");
 });

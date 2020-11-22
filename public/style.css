@@ -2,30 +2,166 @@
     margin: 0;
     padding: 0;
     border: 0;
+    -webkit-box-sizing: border-box;
     box-sizing: border-box;
     font-family: "Fredericka the Great", cursive;
 }
 
 body {
     width: 100vw;
-    height: 100vh;
-    background-color: rgb(16, 41, 88);
+    min-height: 100vh;
+    background-color: rgb(91, 99, 114);
 }
 
 header {
-    width: 100vw;
-    height: 10vh;
+    width: 100%;
+}
+
+h1 {
+    text-align: center;
+    padding: 5px;
 }
 
 main {
-    width: 100vw;
-    height: 60vh;
+    width: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
     flex-direction: column;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
     align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
     justify-content: center;
 }
 
 canvas {
     background-color: beige;
+}
+
+#people,
+#other-players,
+#chat-canvas {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+}
+
+.players {
+    font-size: 3rem;
+    margin: 5px;
+    border-radius: 10px;
+    border: 5px solid rgba(0, 0, 0, 0);
+    padding: 2px;
+    position: relative;
+}
+
+.players span {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.my-emoji {
+    background-color: yellow;
+    border: 5px solid yellow;
+    border-radius: 10px;
+    padding: 2px;
+    position: relative;
+}
+
+.my-emoji::before {
+    content: "YOUR EMOJI";
+    position: absolute;
+    top: 0;
+    font-size: 0.5rem;
+    font-weight: bold;
+}
+
+.drawPlayer {
+    border: 5px solid rgb(113, 246, 255);
+    background-color: beige;
+    position: relative;
+}
+
+.drawPlayer::after {
+    content: "✏";
+    position: absolute;
+    bottom: 0;
+    left: -1rem;
+    font-size: 3rem;
+    -webkit-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+
+#guess-field {
+    margin: 10px 0;
+}
+
+#input-field {
+    font-size: 2rem;
+    padding: 10px;
+    text-align: center;
+}
+
+button {
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 1.5rem;
+    background-color: rgb(255, 123, 0);
+}
+
+#chat {
+    width: 20vw;
+    height: 400px;
+    background-color: orange;
+    margin-left: 5px;
+    padding: 10px;
+    overflow: auto;
+}
+#chat > p {
+    border-top: 1px solid gray;
+    padding: 5px 0;
+}
+
+.correct:hover {
+    background-color: green;
+    cursor: pointer;
+}
+
+.winner {
+    border: 3px solid green;
+    border-radius: 10px;
+    background-color: green;
+}
+
+#winner-main {
+    width: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    font-size: 4rem;
+}
+
+#play-again {
+    width: 100%;
+    text-align: center;
+}
+
+a {
+    font-size: 2rem;
+    color: beige;
 }
