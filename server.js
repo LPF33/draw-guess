@@ -59,6 +59,8 @@ io.on("connection", (socket) => {
 
         //sending to the client
         socket.emit("get-emoji", playerData);
+
+        //broadcasting
         //sending to all clients connected to the server except the sender
         socket.broadcast.emit("new-player", playerData);
     });

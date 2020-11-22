@@ -6,7 +6,7 @@
 
 -   socket.emit('message', 'hello stranger!');
 
-### sending to all clients except sender:
+### sending to all clients except sender: (broadcast)
 
 -   socket.broadcast.emit('broadcast', 'hello friends!');
 
