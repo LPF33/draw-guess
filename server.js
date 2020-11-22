@@ -8,11 +8,13 @@ const emojis = ['🐸','🐱','🦊', '🐻', '🐼', '🐨', '🐙', '🦁','�
 //Setup for the Server and binding to Socket.io
 const port = process.env.PORT || 8080;
 
+//just assign the express-server to a variable and pass it to the socket.io instance
 const app = express();
 const server = app.listen(port, () =>
     console.log("Server running on port ", port)
 );
 
+// alternative way how to setup a http-server
 //const server = require("http").Server(app);
 //server.listen(port, () => console.log("Server running on port ", port));
 
@@ -20,6 +22,7 @@ const io = socket(server);
 
 app.use(express.static("public"));
 
+//Express routes
 app.get("/", (request, response) => {
     response.sendFile(__dirname + "/views/index.html");
 });
@@ -37,6 +40,7 @@ app.get("/getwinner", (request, response) => {
     response.json(winner);
 });
 
+//socket.io event handling
 io.on("connection", (socket) => {
     const [playerNumber, drawPlayer] = counter.getCounter(socket);
 
@@ -98,6 +102,7 @@ io.on("connection", (socket) => {
     socket.on("i-am-winner", (data) => {
         counter.setWinner(data);
 
+        //sending to all connected clients
         io.emit("winner-found");
     });
 });
