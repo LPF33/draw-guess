@@ -1,3 +1,3 @@
-// socket.on("disconnect", (reason) => {
+// socket.on("disconnect", () => {
 //     window.location = "/blank";
 // });
