@@ -70,5 +70,5 @@
     io.emit('The socket with the id \${socket.id} left us!');
     });
 
-More on:
+Read more:
 https://socket.io/docs/v3
