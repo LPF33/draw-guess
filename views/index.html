@@ -8,14 +8,33 @@
             href="https://fonts.googleapis.com/css2?family=Fredericka+the+Great&display=swap"
             rel="stylesheet"
         />
-        <link rel="stylesheet" href="/index.css" />
-        <title>Draw & Guess it</title>
+        <link rel="stylesheet" href="/style.css" />
+        <title>Draw & Guess it!</title>
     </head>
     <body>
-        <h1>Draw & Guess it</h1>
-        <h2>Welcome</h2>
-        <form method="post" action="/game">
-            <input type="submit" value="Start new Game" />
-        </form>
+        <header>
+            <h1>Draw & Guess it!</h1>
+        </header>
+
+        <main>
+            <div id="chat-canvas">
+                <canvas width="600px" height="400px"></canvas>
+                <div id="chat"></div>
+            </div>
+            <div id="people">
+                <div class="players my-emoji"></div>
+                <div id="other-players"></div>
+            </div>
+            <div id="guess-field">
+                <input type="text" id="input-field" />
+                <button id="guess-button">Guess</button>
+            </div>
+        </main>
+        <audio
+            src="http://localhost:8080/applause.mp3"
+            type="audio/mpeg"
+        ></audio>
     </body>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/game.js"></script>
 </html>
