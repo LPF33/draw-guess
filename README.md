@@ -1,74 +1,38 @@
 # Socket.io (Encounter)
 
-## Cheatsheet (server-side)
+# Draw & Guess 🖌🖼🕵️‍♀️
 
-### sending to the client:
+Someone draws, the others guess!\
+How simple is that!\
+One of my first encounters at Spiced!\
+Active player: Has the pencil in his emoji and a light blue border. Active player has to look for the correct answers in the chat. If the correct answer is under the guesses, than the active player should click the "thumbs-up"-button. The player, who guessed right, gets a point and the next player's turn! And so on! You can leave the "room", come and go! Only 10 players allowed. Player, who cannot enter the "room" will be redirected in to the "waiting room", and when someone leaves the "room" will be reconnected to the "room". Who guesses four times correctly is the winner!
 
--   socket.emit('message', 'hello stranger!');
+## XSS attack
 
-### sending to all clients except sender: (broadcast)
+Good example to show Cross Site Scripting (XSS) Attacks
+Cross Site Scripting attack is a malicious code injection, which will be executed in the victim’s browser.
 
--   socket.broadcast.emit('broadcast', 'hello friends!');
+Prevention:
+Sanitize the users input (use a library)
 
-### sending to all connected clients:
+-   Data validation
+-   Filtering
+-   Escaping
 
--   io.emit('an event sent to all connected clients');
--   io.sockets.emit('an event sent to all connected clients');
+Example input for sending via Websockets to all connected clients:
+&lt;img src="empty.gif" onerror="document.body.innerHTML = `YOU SHOULD SANITIZE THE USERS INPUT`;alert('XSS attack'); " &gt;
 
-### sending to a specific socketId (private message):
+## Tech Stack:
 
--   io.to(socketId).emit('message', 'for your eyes only');
--   socket.broadcast.to(socketId).emit('message', 'for your eyes only');
--   io.sockets.sockets.get(socketId).emit("message", "for your eyes only"); (v3.0.0)
+-   Express
+-   Socket.io
 
-### Send to all sockets except for a specific one:
+[Play here](https://spicy-draw-it.glitch.me)
 
--   io.sockets.sockets.get(data.socket).broadcast.emit("message", "we exclude one socket"); (v3.0.0)
+[Socket.io Cheatsheet](https://github.com/LPF33/guess-flag/blob/lesson/README.md)
 
-## Rooms
+[More about XSS](https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html)
 
-### join to subscribe the socket to a given channel:
+## Preview
 
--   socket.join('some room');
-
-### sending to all clients in 'game' room except sender:
-
--   socket.to('game').emit('message', "let's play a game");
--   socket.broadcast.to('game').emit('message', "let's play a game");
-
-### sending to all clients in 'game1' and/or in 'game2' room, except sender:
-
--   socket.to('game1').to('game2').emit('nice game', "let's play a game");
-
-### sending to all clients in 'game' room, including sender:
-
--   io.to('some room').emit('some event'):
--   io.in('game').emit('big-announcement', 'the game will start soon');
-
-### leave to unsubscribe the socket to a given channel:
-
--   socket.leave('some room');
-
-## Note: The following events are reserved and should not be used as event names by your application:
-
--   connect
--   connect_error
--   disconnect
--   disconnecting
--   newListener
--   removeListener
-
-## Some useful stuff:
-
-### Disconnect the socket:
-
--   socket.disconnect();
-
-### Event, when the socket disconnects (e.g. closes the browser):
-
--   socket.on("disconnect", () => {
-    io.emit('The socket with the id \${socket.id} left us!');
-    });
-
-Read more:
-https://socket.io/docs/v3
+![GuessFlag](draw_guess.JPG)

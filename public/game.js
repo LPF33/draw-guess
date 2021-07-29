@@ -86,11 +86,7 @@
     socket.on("guess", (data) => {
         const userJson = JSON.stringify(data.playerData);
 
-        const chatNode = `<p>${
-            data.playerData.emoji
-        } guessed: <strong>${data.guessedValue.toUpperCase()}</strong> <button class="correct" datauser=${userJson} dataword="${
-            data.guessedValue
-        }">👍🏻</button></p>`;
+        const chatNode = `<p>${data.playerData.emoji} guessed: <strong>${data.guessedValue}</strong> <button class="correct" datauser=${userJson} dataword="${data.guessedValue}">👍🏻</button></p>`;
 
         chatField.innerHTML += chatNode;
         chatField.scrollTop = chatField.scrollHeight;

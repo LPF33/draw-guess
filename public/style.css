@@ -8,8 +8,6 @@
 }
 
 body {
-    width: 100vw;
-    min-height: 100vh;
     background-color: rgb(91, 99, 114);
 }
 
@@ -23,7 +21,6 @@ h1 {
 }
 
 main {
-    width: 100%;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -34,9 +31,14 @@ main {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center;
+}
+
+@media screen and (max-width: 900px) {
+    main {
+        -webkit-box-align: start;
+        -ms-flex-align: start;
+        align-items: flex-start;
+    }
 }
 
 canvas {
@@ -119,12 +121,12 @@ button {
 }
 
 #chat {
-    width: 20vw;
+    width: 250px;
     height: 400px;
     background-color: orange;
     margin-left: 5px;
     padding: 10px;
-    overflow: auto;
+    overflow-y: auto;
 }
 #chat > p {
     border-top: 1px solid gray;
